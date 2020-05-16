@@ -38,30 +38,40 @@ int menu(){
 void printMatrix (int** mat, int x, int y)
 {
 	if(mat!=NULL){
+		cout<<"##############################################################";
 		for(int i = 0; i<x;i++){
 			for(int j=0;j<y;j++){
-				
-				if(i==0||j==0||i==x||j==y)
+				if(j==0)
 				{
-					cout<<"#";
+					cout<<"# ";
 				}
-				else if(mat[i][j]==1)
+				if(mat[i][j]==1)
 				{
-					cout<<"*";
+					cout<<" * ";
 				}
 				else
 				{
-					cout<<" ";
+					cout<<"   ";
+				}
+				if(j==y-1)
+				{
+					cout<<" #";
 				}
 			}
 			cout<<endl;
 		}//forj
+		cout<<"###############################################################"<<endl;
 	}//endif
 }
 
 int** fillMatrix(int x, int y)
 {
-	int** mat = NULL;
+	int ** mat ;
+	mat = new int*[y];
+	for(int i = 0; i < y ; i++)
+	{
+		mat[i] = new int[x];
+	}
 	
 	for(int i=0;i<x;i++)
 	{
@@ -74,30 +84,98 @@ int** fillMatrix(int x, int y)
 	return mat;
 }
 
+int cantidadVecinos(int** mat,int x, int y,int size1, int size2)
+{
+	int vecinos=0;
+	
+	for(int i=x-1;i<x+2;i++)
+	{
+		for(int j=y-1;j<y+2;j++)
+		{
+			if(i!=x||j!=y)
+			{
+				if(!(i<0||i>=size1||j<0||j>=size2))
+				{
+					vecinos=vecinos+mat[i][j];
+				}
+			}
+		}
+	}
+	
+	return vecinos;
+}
+
+int nuevoEstado(int** mat,int fila,int col, int size1, int size2)
+{
+	int celula;
+	int vecinos=cantidadVecinos(mat,fila,col,size1,size2);
+	
+	if(mat[fila][col]==1)
+	{
+		if(vecinos<=1||vecinos>=4)
+		{
+			celula=0;
+		}
+		else
+		{
+			celula=1;
+		}
+	}
+	else
+	{
+		if(vecinos==3)
+		{
+			celula=1;
+		}
+		else
+		{
+			celula=0;
+		}
+	}
+	
+	return celula;
+}
 
 
-int conway(int** mat,int x,int y, int turnos)
+
+void conway(int** mat,int x,int y, int turnos)
 {
 	if (turnos==0)
 	{
 		cout<< "Final de la Simulacion"<<endl;
-		return 0;
 	}
 	else
 	{
 		printMatrix(mat,x,y);
-		char ch;
-		ch=getch();
+		
 		getch();
 		
+		int ** newMat ;
+		newMat = new int*[y];
+		for(int i = 0; i < y ; i++)
+		{
+			newMat[i] = new int[x];
+		}
 		
+		for(int i=0;i<x;i++)
+		{
+			for(int j=0;j<y;j++)
+			{
+				
+				newMat[i][j]=nuevoEstado(mat,i,j,x,y);
+			}
+			//cout<<"pointer "<<endl;
+		}
+		//printMatrix(newMat,x,y);
+		
+		conway(newMat,x,y,turnos-1);
 	}
 }
 
 
 int main(int argc, char** argv) {
 	int option=0;
-	while( option != 4 ) {
+	while( option != 3 ) {
 		
 		switch( option = menu() ){ 
 		
@@ -110,8 +188,14 @@ int main(int argc, char** argv) {
 				cin>>y;
 				cout<<"Ingrese la cantidad de turnos por hacer: ";
 				cin>>turnos;
+				int ** mat ;
+				mat = new int*[y];
+				for(int i = 0; i < y ; i++)
+				{
+					mat[i] = new int[x];
+				}
 				
-				int** mat=fillMatrix(x,y);
+				mat=fillMatrix(x,y);
 				
 				conway(mat,x,y,turnos);
 				
