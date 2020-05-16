@@ -38,7 +38,11 @@ int menu(){
 void printMatrix (int** mat, int x, int y)
 {
 	if(mat!=NULL){
-		cout<<"##############################################################";
+		for(int i = 0; i<=y;i++)
+		{
+			cout<<" # ";
+		}
+		cout<<endl;
 		for(int i = 0; i<x;i++){
 			for(int j=0;j<y;j++){
 				if(j==0)
@@ -60,7 +64,11 @@ void printMatrix (int** mat, int x, int y)
 			}
 			cout<<endl;
 		}//forj
-		cout<<"###############################################################"<<endl;
+		for(int i = 0; i<=y;i++)
+		{
+			cout<<" # ";
+		}
+		cout<<endl;
 	}//endif
 }
 
@@ -142,6 +150,7 @@ void conway(int** mat,int x,int y, int turnos)
 {
 	if (turnos==0)
 	{
+		printMatrix(mat,x,y);
 		cout<< "Final de la Simulacion"<<endl;
 	}
 	else
